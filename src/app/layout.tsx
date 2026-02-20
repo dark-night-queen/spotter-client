@@ -1,8 +1,10 @@
-import type { Metadata } from "next";
-import { Lato } from "next/font/google";
 import "./globals.css";
 
+import type { Metadata } from "next";
+import { Lato } from "next/font/google";
+
 import { ThemeProvider } from "@/lib/providers/theme-provider";
+import { QueryProvider } from "@/lib/providers/query-provider";
 
 const latoSans = Lato({
   variable: "--font-lato-sans",
@@ -21,15 +23,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${latoSans.variable}  antialiased`}>
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${latoSans.variable} antialiased`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <QueryProvider>{children}</QueryProvider>
         </ThemeProvider>
       </body>
     </html>
