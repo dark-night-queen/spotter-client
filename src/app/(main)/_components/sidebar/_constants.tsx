@@ -1,6 +1,6 @@
 import { IconLayoutDashboard, IconRouteSquare } from "@tabler/icons-react";
 import type { TablerIcon } from "@tabler/icons-react";
-import { Routes, RouteNames } from "../../_constants";
+import { Routes, RouteNames } from "@/app/(main)/_routes";
 
 type NavItem = {
   title: string;

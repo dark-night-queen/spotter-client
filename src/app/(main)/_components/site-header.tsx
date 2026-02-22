@@ -2,7 +2,7 @@ import { usePathname } from "next/navigation";
 
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { getRouteNameFromPathname } from "../_constants";
+import { getRouteNameFromPathname } from "../_routes";
 
 export function SiteHeader() {
   const pathname = usePathname();

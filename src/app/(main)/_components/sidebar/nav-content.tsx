@@ -12,7 +12,6 @@ import {
 } from "@/components/ui/sidebar";
 import { NavItem } from "./_constants";
 
-// driver code
 interface NavContentProps extends React.ComponentPropsWithoutRef<
   typeof SidebarGroup
 > {
