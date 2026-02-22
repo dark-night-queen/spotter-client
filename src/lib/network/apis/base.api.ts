@@ -6,7 +6,7 @@ export const apiRequest = async (
   method: "GET" | "POST" | "PUT" | "DELETE" = "GET",
   data?: any,
 ) => {
-  let fullUrl = `${baseUrl}${url}`;
+  let fullUrl = `${baseUrl}/v1/${url}`;
 
   const options: RequestInit = {
     method,
@@ -37,7 +37,6 @@ export const apiRequest = async (
   return response.json();
 };
 
-// Simplified export for your GET requests
 export const get = (url: string, params?: any) =>
   apiRequest(url, "GET", params);
 export const post = (url: string, data: any) => apiRequest(url, "POST", data);
