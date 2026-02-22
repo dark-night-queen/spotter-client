@@ -28,12 +28,12 @@ export default function RootLayout({
       <body className={`${latoSans.variable} antialiased`}>
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
+          defaultTheme="light"
           enableSystem
           disableTransitionOnChange
         >
           <QueryProvider>{children}</QueryProvider>
-          <Toaster  />
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>
