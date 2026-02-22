@@ -7,42 +7,29 @@ import React from "react";
 import {
   Sidebar as BaseSidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarHeader,
 } from "@/components/ui/sidebar";
 
-// custom components
-import { OrgInfo } from "./org-info";
-import { NavUser } from "./nav-user";
+import { DriverInfo } from "./driver-info";
 import { NavContent, NavContentWithLabel } from "./nav-content";
+import { NavItems, NavToolItems } from "./_constants";
 
-// constants
-import { NavItems, NavFooterItems, NavToolItems } from "./constants";
-
-// driver code
 const user = {
-  name: "Charlotte Nguyen",
-  email: "c.nguyen@leaf.com",
-  avatar: "https://i.pravatar.cc/150?u=charlotteness",
-  truckId: "TC100023u923",
+  name: "John Doe",
+  truckId: "TC100023",
 };
 
-export const Sidebar = () => {
+export function Sidebar() {
   return (
     <BaseSidebar collapsible="icon" variant="inset">
       <SidebarHeader>
-        <OrgInfo truckId={user.truckId} />
+        <DriverInfo driver={user} />
       </SidebarHeader>
 
       <SidebarContent>
         <NavContent items={NavItems} />
         <NavContentWithLabel label={"Tools"} items={NavToolItems} />
-        <NavContent items={NavFooterItems} className="mt-auto" />
       </SidebarContent>
-
-      <SidebarFooter>
-        <NavUser user={user} />
-      </SidebarFooter>
     </BaseSidebar>
   );
-};
+}
