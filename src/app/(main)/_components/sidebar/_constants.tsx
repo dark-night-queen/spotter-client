@@ -1,4 +1,4 @@
-import { IconLayoutDashboard, IconRouteSquare } from "@tabler/icons-react";
+import { IconRouteSquare } from "@tabler/icons-react";
 import type { TablerIcon } from "@tabler/icons-react";
 import { Routes, RouteNames } from "@/app/(main)/_routes";
 
@@ -8,14 +8,6 @@ type NavItem = {
   icon: TablerIcon;
 };
 
-const NavItems: NavItem[] = [
-  {
-    title: RouteNames.DASHBOARD,
-    url: Routes.DASHBOARD,
-    icon: IconLayoutDashboard,
-  },
-];
-
 const NavToolItems: NavItem[] = [
   {
     title: RouteNames.TRIPS,
@@ -24,5 +16,5 @@ const NavToolItems: NavItem[] = [
   },
 ];
 
-export { NavItems, NavToolItems };
+export { NavToolItems };
 export type { NavItem };

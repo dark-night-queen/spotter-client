@@ -22,44 +22,30 @@ interface NavContentWithLabelProps extends NavContentProps {
   label: string;
 }
 
-function NavMenuContent({ items }: { items: NavItem[] }) {
-  const pathname = usePathname();
-
-  return (
-    <SidebarGroupContent>
-      <SidebarMenu>
-        {items.map((item) => (
-          <SidebarMenuItem key={item.title}>
-            <SidebarMenuButton asChild isActive={pathname === item.url}>
-              <Link href={item.url}>
-                <item.icon />
-                <span>{item.title}</span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        ))}
-      </SidebarMenu>
-    </SidebarGroupContent>
-  );
-}
-
-export function NavContent({ items, ...props }: NavContentProps) {
-  return (
-    <SidebarGroup {...props}>
-      <NavMenuContent items={items} />
-    </SidebarGroup>
-  );
-}
-
 export function NavContentWithLabel({
   label,
   items,
   ...props
 }: NavContentWithLabelProps) {
+  const pathname = usePathname();
+
   return (
     <SidebarGroup {...props}>
       <SidebarGroupLabel>{label}</SidebarGroupLabel>
-      <NavMenuContent items={items} />
+      <SidebarGroupContent>
+        <SidebarMenu>
+          {items.map((item) => (
+            <SidebarMenuItem key={item.title}>
+              <SidebarMenuButton asChild isActive={pathname === item.url}>
+                <Link href={item.url}>
+                  <item.icon />
+                  <span>{item.title}</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          ))}
+        </SidebarMenu>
+      </SidebarGroupContent>
     </SidebarGroup>
   );
 }

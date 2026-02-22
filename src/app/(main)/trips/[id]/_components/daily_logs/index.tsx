@@ -5,11 +5,19 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ViewLogDetails } from "./view-log-details";
 
-export function DailyLogs({ trip }: { trip: Trip }) {
+export function DailyLogs({
+  trip,
+  isDrawer = false,
+}: {
+  trip: Trip;
+  isDrawer?: boolean;
+}) {
   return (
     <section className="space-y-4">
       <div className="flex items-center justify-between px-1">
-        <h2 className="text-xl font-semibold tracking-tight">
+        <h2
+          className={`${isDrawer ? "uppercase text-muted-foreground" : "text-xl"} font-semibold tracking-tight`}
+        >
           Daily Log Sheets
         </h2>
         <Badge variant="outline" className="font-mono">
@@ -38,15 +46,16 @@ export function DailyLogs({ trip }: { trip: Trip }) {
               </div>
 
               <div className="flex items-center justify-between md:justify-end gap-6 border-t md:border-t-0 pt-3 md:pt-0">
-                <div className="text-right">
-                  <p className="text-sm font-medium">
-                    {log.total_miles.toFixed(1)} mi
-                  </p>
-                  <p className="text-[10px] uppercase text-muted-foreground font-bold">
-                    Distance
-                  </p>
-                </div>
-
+                {!isDrawer && (
+                  <div className="text-right">
+                    <p className="text-sm font-medium">
+                      {log.total_miles.toFixed(1)} mi
+                    </p>
+                    <p className="text-[10px] uppercase text-muted-foreground font-bold">
+                      Distance
+                    </p>
+                  </div>
+                )}
                 <ViewLogDetails log={log} />
               </div>
             </div>

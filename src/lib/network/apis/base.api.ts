@@ -1,4 +1,3 @@
-// base.api.ts
 const baseUrl = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") || "";
 
 export const apiRequest = async (

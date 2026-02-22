@@ -5,6 +5,7 @@ import { Lato } from "next/font/google";
 
 import { ThemeProvider } from "@/lib/providers/theme-provider";
 import { QueryProvider } from "@/lib/providers/query-provider";
+import { Toaster } from "@/components/ui/sonner";
 
 const latoSans = Lato({
   variable: "--font-lato-sans",
@@ -32,6 +33,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <QueryProvider>{children}</QueryProvider>
+          <Toaster  />
         </ThemeProvider>
       </body>
     </html>

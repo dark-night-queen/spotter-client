@@ -9,9 +9,10 @@ import { Button } from "@/components/ui/button";
 interface HeaderProps {
   tripId: number;
   created_at: string;
+  isDrawer?: boolean;
 }
 
-export function Header({ tripId, created_at }: HeaderProps) {
+export function Header({ tripId, created_at, isDrawer = false }: HeaderProps) {
   const router = useRouter();
 
   const status = "completed";
@@ -30,20 +31,24 @@ export function Header({ tripId, created_at }: HeaderProps) {
 
   return (
     <div className="space-y-4 mb-8">
-      <Button
-        variant="ghost"
-        size="sm"
-        onClick={() => router.push("/trips")}
-        className="-ml-2 text-muted-foreground hover:text-primary"
-      >
-        <IconChevronLeft className="mr-1 h-4 w-4" />
-        Back to Trips
-      </Button>
+      {!isDrawer && (
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => router.push("/trips")}
+          className="-ml-2 text-muted-foreground hover:text-primary"
+        >
+          <IconChevronLeft className="mr-1 h-4 w-4" />
+          Back to Trips
+        </Button>
+      )}
 
       <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <div className="flex items-center gap-3">
-            <h1 className="text-3xl font-bold tracking-tight">
+            <h1
+              className={`${isDrawer ? "text-2xl" : "text-3xl"} font-bold tracking-tight`}
+            >
               Trip #{displayId}
             </h1>
             <Badge className={`${statusColors[status]} capitalize px-3`}>
@@ -56,12 +61,14 @@ export function Header({ tripId, created_at }: HeaderProps) {
           </div>
         </div>
 
-        <div className="flex gap-2">
-          <Button variant="outline" size="sm">
-            Export Log
-          </Button>
-          <Button size="sm">Edit Trip</Button>
-        </div>
+        {!isDrawer && (
+          <div className="flex gap-2">
+            <Button variant="outline" size="sm">
+              Export Log
+            </Button>
+            <Button size="sm">Edit Trip</Button>
+          </div>
+        )}
       </header>
     </div>
   );

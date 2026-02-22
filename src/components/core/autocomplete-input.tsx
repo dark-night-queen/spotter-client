@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
-import { useMap } from "@/lib/providers/google-map";
+import React, { useEffect, useRef, useState } from "react";
+import { useMapsLibrary } from "@vis.gl/react-google-maps";
+
 import { Input } from "@/components/ui/input";
 
 interface AutocompleteInputProps extends React.ComponentProps<"input"> {
@@ -12,28 +13,47 @@ export const AutocompleteInput = ({
   onLocationSelect,
   ...props
 }: AutocompleteInputProps) => {
-  const { placesLib, isLoaded } = useMap();
+  const placesLib = useMapsLibrary("places");
   const inputRef = useRef<HTMLInputElement>(null);
+  const [autocomplete, setAutocomplete] =
+    useState<google.maps.places.Autocomplete | null>(null);
 
   useEffect(() => {
-    if (!isLoaded || !placesLib || !inputRef.current) return;
+    if (!placesLib || !inputRef.current) return;
 
-    const autocomplete = new placesLib.Autocomplete(inputRef.current, {
+    const options = {
       fields: ["geometry", "name", "formatted_address"],
       types: ["address"],
-    });
+    };
 
-    autocomplete.addListener("place_changed", () => {
+    const instance = new placesLib.Autocomplete(inputRef.current, options);
+    setAutocomplete(instance);
+
+    return () => {
+      // Clean up listeners
+      google.maps.event.clearInstanceListeners(instance);
+    };
+  }, [placesLib]);
+
+  useEffect(() => {
+    if (!autocomplete) return;
+
+    const listener = autocomplete.addListener("place_changed", () => {
       const place = autocomplete.getPlace();
-      if (place.geometry?.location) {
-        onLocationSelect(place.formatted_address || "");
+
+      if (place.formatted_address) {
+        // Prevent local state mismatch if needed
+        if (inputRef.current) {
+          inputRef.current.value = place.formatted_address;
+        }
+        onLocationSelect(place.formatted_address);
       }
     });
 
     return () => {
-      google.maps.event.clearInstanceListeners(autocomplete);
+      google.maps.event.removeListener(listener);
     };
-  }, [isLoaded, onLocationSelect, placesLib]);
+  }, [autocomplete, onLocationSelect]);
 
   return (
     <Input

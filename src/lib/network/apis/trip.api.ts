@@ -50,7 +50,7 @@ interface TripInput {
 const TripService = {
   create: (tripData: TripInput) => post("trips/", tripData),
   getAll: () => get("trips/"),
-  getById: (id: string) => get(`trips/${id}/`),
+  getById: (id: string): Promise<Trip> => get(`trips/${id}/`),
 };
 
 export { TripService };

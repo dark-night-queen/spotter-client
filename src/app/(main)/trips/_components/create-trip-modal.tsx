@@ -1,7 +1,8 @@
 "use client";
 
 import React from "react";
-import { useMap } from "@/lib/providers/google-map";
+import { toast } from "sonner";
+import { useCreateTrip } from "@/lib/network/queries/trip.queries";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -27,21 +28,25 @@ import {
   IconClockHour4,
 } from "@tabler/icons-react";
 import { AutocompleteInput } from "@/components/core/autocomplete-input";
+import { useReverseGeocoding } from "@/lib/hooks/useReverseGeocoding";
+import { useRouter } from "next/navigation";
 
 export function CreateTripModal() {
-  const { getAddressFromCoords } = useMap();
+  const router = useRouter();
+  const { getAddressFromCoords } = useReverseGeocoding();
+  const { mutate: createTrip, isPending } = useCreateTrip();
 
   const [open, setOpen] = React.useState(false);
   const [locating, setLocating] = React.useState(false);
   const [formData, setFormData] = React.useState({
-    currentLocation: "",
-    pickup: "",
-    dropOff: "",
+    startAddress: "",
+    pickupAddress: "",
+    dropOffAddress: "",
     cycleUsed: 0,
   });
 
-  const handleUseCurrentLocation = (e: React.MouseEvent) => {
-    e.preventDefault(); // Prevent accidental form triggers
+  const handleUseStartAddress = (e: React.MouseEvent) => {
+    e.preventDefault();
     if (!navigator.geolocation) return;
 
     setLocating(true);
@@ -49,20 +54,35 @@ export function CreateTripModal() {
       async (position) => {
         const { latitude, longitude } = position.coords;
         const address = await getAddressFromCoords(latitude, longitude);
-        setFormData((prev) => ({ ...prev, currentLocation: address }));
+        setFormData((prev) => ({ ...prev, startAddress: address }));
         setLocating(false);
       },
       () => setLocating(false),
     );
   };
 
-  const isSubmitting = locating; // You can add actual API loading state here too
-
   const handleSubmit = (e: React.SubmitEvent<Element>) => {
     e.preventDefault();
-    // Handle form submission logic here
-    setOpen(false);
+    const payload = {
+      start_address: formData.startAddress,
+      pickup_address: formData.pickupAddress,
+      drop_off_address: formData.dropOffAddress,
+      initial_cycle_hours: formData.cycleUsed,
+    };
+
+    createTrip(payload, {
+      onSuccess: (data) => {
+        toast.success("Trip successfully logged!");
+        setOpen(false);
+        router.push(`/trips/${data.id}`);
+      },
+      onError: (err) => {
+        toast.error(err.message || "Something went wrong");
+      },
+    });
   };
+
+  const isSubmitting = locating || isPending;
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -91,27 +111,33 @@ export function CreateTripModal() {
             <div className="relative">
               <IconCircleDot className="absolute -left-5.25 top-9 z-10 size-4 text-slate-400 bg-background" />
               <Field>
-                <Label htmlFor="currentLocation">Starting Point</Label>
+                <Label htmlFor="startAddress">Starting Point</Label>
                 <div className="relative flex items-center">
-                  <Input
-                    id="currentLocation"
+                  <AutocompleteInput
+                    id="startAddress"
                     placeholder={
                       locating ? "Detecting GPS..." : "Search start location"
                     }
                     className="pr-10"
-                    value={formData.currentLocation}
+                    value={formData.startAddress}
                     onChange={(e) =>
                       setFormData((prev) => ({
                         ...prev,
-                        currentLocation: e.target.value,
+                        startAddress: e.target.value,
                       }))
                     }
+                    onLocationSelect={(address) => {
+                      setFormData((prev) => ({
+                        ...prev,
+                        startAddress: address,
+                      }));
+                    }}
                   />
                   <Button
                     variant="ghost"
                     size="icon"
                     className="absolute right-0 h-full w-10 text-slate-400"
-                    onClick={handleUseCurrentLocation}
+                    onClick={handleUseStartAddress}
                     disabled={locating}
                   >
                     {locating ? <Spinner /> : <IconMapPin size={18} />}
@@ -123,13 +149,16 @@ export function CreateTripModal() {
             <div className="relative">
               <IconCircleDot className="absolute -left-5.25 top-9 z-10 size-4 text-indigo-500 bg-background" />
               <Field>
-                <Label htmlFor="pickup">Pickup Address</Label>
+                <Label htmlFor="pickupAddress">Pickup Address</Label>
                 <AutocompleteInput
-                  id="pickup"
-                  value={formData.pickup}
+                  id="pickupAddress"
+                  value={formData.pickupAddress}
                   placeholder="Where are you picking up?"
                   onLocationSelect={(address) => {
-                    setFormData((prev) => ({ ...prev, pickup: address }));
+                    setFormData((prev) => ({
+                      ...prev,
+                      pickupAddress: address,
+                    }));
                   }}
                 />
               </Field>
@@ -138,13 +167,16 @@ export function CreateTripModal() {
             <div className="relative">
               <IconMapPinFilled className="absolute -left-5.25 top-9 z-10 size-4 text-teal-600" />
               <Field>
-                <Label htmlFor="dropOff">Final Destination</Label>
+                <Label htmlFor="dropOffAddress">Final Destination</Label>
                 <AutocompleteInput
-                  id="dropOff"
-                  value={formData.dropOff}
+                  id="dropOffAddress"
+                  value={formData.dropOffAddress}
                   placeholder="Where is the drop-off?"
                   onLocationSelect={(address) => {
-                    setFormData((prev) => ({ ...prev, dropOff: address }));
+                    setFormData((prev) => ({
+                      ...prev,
+                      dropOffAddress: address,
+                    }));
                   }}
                 />
               </Field>
@@ -153,7 +185,6 @@ export function CreateTripModal() {
 
           <Field>
             <Label htmlFor="cycle">Current Cycle Used (Hrs)</Label>
-            {/* TODO: convert this into tooltip */}
             <p className="text-xs text-muted-foreground -my-1">
               How many hours have you worked in the last 7/8 days?
             </p>
@@ -187,7 +218,10 @@ export function CreateTripModal() {
                 Cancel
               </Button>
             </DialogClose>
-            <Button type="submit" disabled={isSubmitting || !formData.dropOff}>
+            <Button
+              type="submit"
+              disabled={isSubmitting || !formData.dropOffAddress}
+            >
               {isSubmitting ? (
                 <>
                   <Spinner />

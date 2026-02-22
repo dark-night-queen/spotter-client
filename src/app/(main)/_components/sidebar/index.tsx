@@ -1,9 +1,5 @@
 "use client";
 
-// code dependencies
-import React from "react";
-
-// core components
 import {
   Sidebar as BaseSidebar,
   SidebarContent,
@@ -11,8 +7,8 @@ import {
 } from "@/components/ui/sidebar";
 
 import { DriverInfo } from "./driver-info";
-import { NavContent, NavContentWithLabel } from "./nav-content";
-import { NavItems, NavToolItems } from "./_constants";
+import { NavContentWithLabel } from "./nav-content";
+import { NavToolItems } from "./_constants";
 
 const user = {
   name: "John Doe",
@@ -27,7 +23,6 @@ export function Sidebar() {
       </SidebarHeader>
 
       <SidebarContent>
-        <NavContent items={NavItems} />
         <NavContentWithLabel label={"Tools"} items={NavToolItems} />
       </SidebarContent>
     </BaseSidebar>

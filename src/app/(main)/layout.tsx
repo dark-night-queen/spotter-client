@@ -1,8 +1,8 @@
 "use client";
 
 import React from "react";
+import { APIProvider } from "@vis.gl/react-google-maps";
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
-import { GoogleMapProvider } from "@/lib/providers/google-map";
 import { Sidebar } from "./_components/sidebar";
 import { SiteHeader } from "./_components/site-header";
 
@@ -23,9 +23,9 @@ const MainLayout = ({ children }: React.PropsWithChildren) => {
           <SiteHeader />
         </div>
 
-        <GoogleMapProvider>
+        <APIProvider apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}>
           <div className="p-4 md:p-8">{children}</div>
-        </GoogleMapProvider>
+        </APIProvider>
       </SidebarInset>
     </SidebarProvider>
   );

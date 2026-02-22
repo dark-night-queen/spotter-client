@@ -1,10 +1,8 @@
 export const Routes = {
-  DASHBOARD: "/",
   TRIPS: "/trips",
 };
 
 export const RouteNames = {
-  DASHBOARD: "Dashboard",
   TRIPS: "Trips",
 };
 
