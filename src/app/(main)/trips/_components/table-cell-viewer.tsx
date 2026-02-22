@@ -48,13 +48,21 @@ export function TableCellViewer({
   );
 }
 
-function TableCellContent({ tripId }) {
+function TableCellContent({ tripId }: { tripId: string }) {
   const { data: trip, isLoading } = useTripById(tripId);
 
   if (isLoading) {
     return (
       <div className="flex h-[70vh] w-full items-center justify-center">
         <Spinner />
+      </div>
+    );
+  }
+
+  if (!trip) {
+    return (
+      <div className="flex h-[70vh] w-full items-center justify-center">
+        <p className="text-muted-foreground">Trip not found.</p>
       </div>
     );
   }
