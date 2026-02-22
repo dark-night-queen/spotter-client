@@ -23,7 +23,7 @@ const MainLayout = ({ children }: React.PropsWithChildren) => {
           <SiteHeader />
         </div>
 
-        <APIProvider apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}>
+        <APIProvider apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ""}>
           <div className="p-4 md:p-8">{children}</div>
         </APIProvider>
       </SidebarInset>

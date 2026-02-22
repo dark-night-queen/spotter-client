@@ -1,7 +1,9 @@
 "use client";
 
 import { useMemo } from "react";
+import { DailyLogs } from "@/lib/network/apis/trip.api";
 import { Eye, Clock, LifeBuoy, Coffee, Moon, Briefcase } from "lucide-react";
+
 import {
   Dialog,
   DialogContent,
@@ -13,7 +15,7 @@ import { Button } from "@/components/ui/button";
 import { ELDGrid } from "./eld-grid";
 import { StatusTable } from "./status-table";
 
-export function ViewLogDetails({ log }) {
+export function ViewLogDetails({ log }: { log: DailyLogs }) {
   const summary = useMemo(() => {
     const totals = { DRIVING: 0, ON_DUTY: 0, OFF_DUTY: 0, SLEEPER_BERTH: 0 };
 
@@ -59,7 +61,7 @@ export function ViewLogDetails({ log }) {
                 Log Sheet: {log.date}
               </DialogTitle>
               <p className="text-sm text-muted-foreground mt-1">
-                Driver: {log.driver_id || "DVI-0001"}
+                Driver: {"DVI-0001"}
               </p>
               <p className="text-sm text-muted-foreground mt-1">
                 Active Work Time: {Math.floor(onDutyMinutes / 60)}h{" "}

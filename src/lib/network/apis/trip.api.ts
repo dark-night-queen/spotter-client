@@ -1,7 +1,7 @@
 import { get, post } from "./base.api";
 
 interface StatusChanges {
-  status: string;
+  status: "OFF_DUTY" | "SLEEPER_BERTH" | "DRIVING" | "ON_DUTY";
   start_time: string;
   end_time: string;
   location_text: string;
@@ -54,4 +54,11 @@ const TripService = {
 };
 
 export { TripService };
-export type { TripInput, Trip, Metrics, RouteGeometry, DailyLogs };
+export type {
+  TripInput,
+  Trip,
+  Metrics,
+  RouteGeometry,
+  DailyLogs,
+  StatusChanges,
+};

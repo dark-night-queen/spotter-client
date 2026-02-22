@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { StatusChanges } from "@/lib/network/apis/trip.api";
 
 const STATUS_Y_MAP = {
   OFF_DUTY: 20,
@@ -14,15 +15,11 @@ const GRID_WIDTH = 600;
 const HEIGHT = 180;
 const TOTAL_WIDTH = GRID_WIDTH + MARGIN_LEFT + 20;
 
-interface ELDGridProps {
-  statusChanges: {
-    start_time: string;
-    end_time: string;
-    status: "OFF_DUTY" | "SLEEPER_BERTH" | "DRIVING" | "ON_DUTY";
-  }[];
-}
-
-export const ELDGrid = ({ statusChanges }: ELDGridProps) => {
+export const ELDGrid = ({
+  statusChanges,
+}: {
+  statusChanges: StatusChanges[];
+}) => {
   const formatHourLabel = (hour: number): string => {
     if (hour === 0) return "12am";
     if (hour === 12) return "12pm";

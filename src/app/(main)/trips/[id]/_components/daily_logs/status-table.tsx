@@ -1,10 +1,13 @@
 "use client";
 
+import { z } from "zod";
 import { Clock, MessageSquare } from "lucide-react";
+
 import {
   useReactTable,
   getCoreRowModel,
   flexRender,
+  ColumnDef,
 } from "@tanstack/react-table";
 import {
   Table,
@@ -24,13 +27,21 @@ interface StatusChange {
   remarks: string;
 }
 
-const columns = [
+export const schema = z.object({
+  status: z.string(),
+  start_time: z.string(),
+  end_time: z.string(),
+  location_text: z.string(),
+  remarks: z.string(),
+});
+
+const columns: ColumnDef<z.infer<typeof schema>>[] = [
   {
     accessorKey: "start_time",
     header: "Start Time",
-    cell: (info) => (
+    cell: ({ row }) => (
       <span className="font-mono text-xs font-medium">
-        {new Date(info.getValue()).toLocaleTimeString("en-US", {
+        {new Date(row.original.start_time).toLocaleTimeString("en-US", {
           hour: "2-digit",
           minute: "2-digit",
           hour12: true,
@@ -41,8 +52,8 @@ const columns = [
   {
     accessorKey: "status",
     header: "Duty Status",
-    cell: (info) => {
-      const val = info.getValue();
+    cell: ({ row }) => {
+      const val = row.original.status;
       const variants: Record<string, string> = {
         DRIVING: "bg-emerald-50 text-emerald-700 border-emerald-50",
         ON_DUTY: "bg-amber-50 text-amber-700 border-amber-50",
@@ -81,10 +92,10 @@ const columns = [
   {
     accessorKey: "remarks",
     header: "Remarks",
-    cell: (info) => (
+    cell: ({ row }) => (
       <div className="flex items-center gap-1.5 italic text-slate-400">
         <MessageSquare className="h-3 w-3 shrink-0" />
-        <span>{info.getValue() || "-"}</span>
+        <span>{row.original.remarks || "-"}</span>
       </div>
     ),
   },
